@@ -51,7 +51,7 @@
         #weather-canvas { z-index: 1; }
         #confetti-canvas { z-index: 250; }
 
-        /* Global Header Controls Bar - Fully visible and centered alignment */
+        /* Global Header Controls Bar */
         .global-controls {
             position: absolute;
             top: 12px;
@@ -105,7 +105,6 @@
             cursor: pointer;
         }
 
-        /* Main Menu Layout Styling */
         #main-menu {
             position: absolute;
             top: 0; left: 0; width: 100%; height: 100%;
@@ -198,7 +197,6 @@
             50% { transform: translateY(-10px) rotate(2deg); }
         }
 
-        /* Frog blinking eye animation */
         .frog-eye-pupil {
             animation: eyeBlink 4s infinite;
             transform-origin: center;
@@ -226,7 +224,6 @@
             display: block;
         }
 
-        /* Center Difficulty and Operations Selectors */
         .selector-row {
             display: flex;
             justify-content: center;
@@ -297,7 +294,6 @@
             box-shadow: 0 2px 5px rgba(0,0,0,0.2); 
         }
 
-        /* Empty Spacer Box - Maintains original menu dimension without credits text */
         .creator-box-spacer {
             height: 70px;
             width: 100%;
@@ -317,7 +313,6 @@
             text-align: center;
         }
 
-        /* Character Selector & Settings Box */
         .char-select-bar {
             display: flex;
             justify-content: center;
@@ -342,54 +337,89 @@
             box-shadow: 0 4px 10px rgba(16, 185, 129, 0.3);
         }
 
-        /* Game Container Layouts */
         #game-container {
             display: none;
-            width: 100%; height: 100%;
-            padding: 16px;
+            width: 100vw; 
+            height: 100vh;
+            padding: 12px;
             position: relative;
             z-index: 10;
-            overflow-y: auto;
+            overflow: hidden;
         }
 
+        /* 1. Solo Mode (Full Screen Arena, Leaves Lined Up Horizontal Bar) */
         .layout-solo { 
             display: flex; 
             justify-content: center; 
             align-items: center; 
+            width: 100%;
             height: 100%; 
         }
         .layout-solo .player-board {
-            max-width: 850px;
-            height: calc(100vh - 32px);
-            border: none;
+            width: 100%;
+            height: 100%;
+            max-width: 1100px;
             border-radius: 28px;
             background: rgba(255, 255, 255, 0.14);
             backdrop-filter: blur(10px);
             box-shadow: 0 15px 35px rgba(0,0,0,0.25);
         }
+        .layout-solo .pads-container {
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            max-width: 900px;
+        }
+        .layout-solo .pad-wrapper { width: 130px; height: 130px; }
+        .layout-solo .pad { width: 120px; height: 68px; font-size: 2rem; }
         
+        /* 2. Duel Mode (2P Vertical Stack - Top and Bottom Rows) */
         .layout-duel { 
-            display: grid; 
-            grid-template-columns: 1fr 1fr; 
-            gap: 16px; 
+            display: flex;
+            flex-direction: column;
+            gap: 12px; 
+            width: 100%;
             height: 100%;
         }
+        .layout-duel .player-board {
+            flex: 1;
+            min-height: 0; /* flex collapse */
+        }
+        .layout-duel .pads-container {
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            padding: 8px;
+        }
+        .layout-duel .pad-wrapper { width: 95px; height: 80px; }
+        .layout-duel .pad { width: 88px; height: 48px; font-size: 1.4rem; }
+        .layout-duel .question-area { font-size: 1.8rem; min-height: 55px; padding: 6px; }
 
+        /* 3. Squad Mode (4P Vertical Stack - 4 Rows from Top to Bottom) */
         .layout-squad { 
-            display: grid; 
-            grid-template-columns: repeat(4, 1fr); 
-            gap: 10px; 
+            display: flex;
+            flex-direction: column;
+            gap: 8px; 
+            width: 100%;
             height: 100%;
         }
+        .layout-squad .player-board {
+            flex: 1;
+            min-height: 0; /* flex collapse */
+            border-radius: 16px;
+        }
+        .layout-squad .pads-container { 
+            grid-template-columns: repeat(4, 1fr); 
+            gap: 6px; 
+            padding: 4px;
+        }
+        .layout-squad .pad-wrapper { width: 75px; height: 50px; }
+        .layout-squad .pad { width: 70px; height: 38px; font-size: 1.15rem; border-bottom-width: 4px; }
+        .layout-squad .question-area { font-size: 1.3rem; min-height: 40px; padding: 2px; }
+        .layout-squad .board-header { padding: 4px 12px; font-size: 0.85rem; }
+        .layout-squad .frog-svg { width: 45px; height: 45px; }
+        .layout-squad .start-pad { width: 80px; height: 36px; bottom: 4px; }
+        .layout-squad .frog { bottom: 14px; }
 
-        /* Squad Mode Responsive Custom Styling */
-        .layout-squad .pad-wrapper { width: 80px; height: 80px; }
-        .layout-squad .pad { width: 72px; height: 40px; font-size: 1.1rem; }
-        .layout-squad .question-area { font-size: 1.5rem; min-height: 55px; padding: 4px; }
-        .layout-squad .board-header { padding: 8px; font-size: 0.88rem; flex-direction: column; gap: 2px; }
-        .layout-squad .frog-svg { width: 50px; height: 50px; }
-
-        @media (max-width: 900px) {
+        @media (max-width: 768px) {
             .menu-box {
                 flex-direction: column;
                 padding: 24px;
@@ -397,12 +427,10 @@
                 max-height: 94vh;
                 overflow-y: auto;
             }
-            .layout-duel { grid-template-columns: 1fr; grid-template-rows: 1fr 1fr; }
-            .layout-squad { grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; } 
-            #game-container { padding: 8px; }
+            .layout-solo .pads-container { grid-template-columns: repeat(2, 1fr); }
+            #game-container { padding: 6px; }
         }
 
-        /* Board Styling */
         .player-board {
             background: rgba(255, 255, 255, 0.16);
             border: 3px solid rgba(255, 255, 255, 0.4);
@@ -413,22 +441,21 @@
             overflow: hidden;
             width: 100%; 
             height: 100%;
-            min-height: 340px;
             backdrop-filter: blur(6px);
             box-shadow: 0 10px 25px rgba(0,0,0,0.18);
         }
 
-        /* Header (Name & Animated Score / Badges) */
         .board-header {
             display: flex; 
             justify-content: space-between;
             align-items: center;
-            padding: 12px 20px;
+            padding: 10px 18px;
             background: rgba(15, 23, 42, 0.45);
-            font-size: 1.15rem;
+            font-size: 1.1rem;
             font-family: 'Fredoka One', cursive;
             color: #ffffff;
             border-bottom: 2px solid rgba(255, 255, 255, 0.2);
+            flex-shrink: 0;
         }
 
         .badge-score {
@@ -457,14 +484,13 @@
             100% { transform: scale(1); }
         }
 
-        /* Question Area Visual Upgrade */
         .question-area {
             text-align: center;
-            padding: 14px;
-            font-size: 2.5rem;
+            padding: 10px;
+            font-size: 2.2rem;
             font-family: 'Fredoka One', cursive;
             text-shadow: 0 4px 10px rgba(0,0,0,0.35);
-            min-height: 85px;
+            min-height: 70px;
             display: flex; 
             justify-content: center; 
             align-items: center;
@@ -472,58 +498,38 @@
             letter-spacing: 2px;
             background: linear-gradient(90deg, rgba(255,255,255,0.05), rgba(255,255,255,0.2), rgba(255,255,255,0.05));
             border-bottom: 1px solid rgba(255,255,255,0.15);
+            flex-shrink: 0;
         }
 
-        @media (max-width: 600px) {
-            .question-area { font-size: 1.8rem; min-height: 65px; }
-            .board-header { padding: 8px 12px; font-size: 0.95rem; }
-        }
-
-        /* Play Area & Pad Items */
         .play-area {
             flex-grow: 1;
             position: relative;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-            padding-bottom: 65px;
+            padding-bottom: 50px;
         }
 
         .pads-container {
             display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 12px;
-            padding: 16px;
             width: 100%;
-            max-width: 720px;
             margin: 0 auto;
             justify-items: center;
             align-items: center;
         }
 
-        @media (max-width: 650px) {
-            .pads-container {
-                grid-template-columns: repeat(2, 1fr);
-                grid-template-rows: repeat(2, 1fr);
-                gap: 12px;
-            }
-        }
-
         .pad-wrapper {
             position: relative;
-            width: 105px; height: 105px;
             display: flex; justify-content: center; align-items: center;
         }
 
         .pad {
-            width: 100px; height: 56px;
             background: radial-gradient(circle at 30% 30%, #4ade80, #16a34a);
             border-radius: 50%;
             border-bottom: 6px solid var(--leaf-shadow);
             border-top: 2px solid #86efac;
             display: flex; justify-content: center; align-items: center;
             font-family: 'Fredoka One', cursive;
-            font-size: 1.75rem;
             color: #064e3b;
             text-shadow: 0 1px 2px rgba(255,255,255,0.6);
             cursor: pointer;
@@ -554,7 +560,6 @@
             filter: grayscale(0.8);
         }
 
-        /* Lotus Flower Blooming SVG overlay */
         .lotus-flower {
             position: absolute;
             top: -16px;
@@ -571,21 +576,15 @@
             100% { transform: translateX(-50%) scale(1) rotate(0deg); opacity: 1; }
         }
 
-        @media (max-width: 480px) {
-            .pad-wrapper { width: 80px; height: 80px; }
-            .pad { width: 78px; height: 40px; font-size: 1.25rem; }
-        }
-
-        /* Start Pad & Frog Elements */
         .start-pad {
             position: absolute;
-            bottom: 12px;
+            bottom: 8px;
             left: 50%;
             transform: translateX(-50%);
-            width: 115px; height: 55px;
+            width: 110px; height: 50px;
             background: radial-gradient(circle at 30% 30%, #4ade80, #15803d);
             border-radius: 50%;
-            border-bottom: 6px solid #14532d;
+            border-bottom: 5px solid #14532d;
             border-top: 2px solid #86efac;
             box-shadow: 0 8px 20px rgba(0,0,0,0.25);
             z-index: 1;
@@ -593,7 +592,7 @@
 
         .frog {
             position: absolute;
-            bottom: 28px;
+            bottom: 22px;
             left: 50%;
             transform: translateX(-50%);
             z-index: 5;
@@ -611,11 +610,10 @@
         }
 
         .frog-svg {
-            width: 70px;
-            height: 70px;
+            width: 65px;
+            height: 65px;
         }
 
-        /* Footprint Trail Particle */
         .footprint-particle {
             position: absolute;
             width: 8px;
@@ -630,14 +628,13 @@
             to { opacity: 0; transform: scale(0.2); }
         }
 
-        /* Floating Overlay Text Banners */
         .banner-popup {
             position: absolute;
             top: 40%;
             left: 50%;
             transform: translate(-50%, -50%);
             font-family: 'Fredoka One', cursive;
-            font-size: 2.2rem;
+            font-size: 2rem;
             text-shadow: 0 4px 12px rgba(0,0,0,0.5);
             pointer-events: none;
             z-index: 150;
@@ -652,7 +649,6 @@
             100% { transform: translate(-50%, -80%) scale(0.8); opacity: 0; }
         }
 
-        /* Sinking & Underwater Bubbles */
         @keyframes sinkAnim {
             0% { transform: translateX(-50%) scale(1) translateY(0); opacity: 1; }
             100% { transform: translateX(-50%) scale(0.2) translateY(50px); opacity: 0; }
@@ -673,7 +669,6 @@
             100% { transform: translateY(-60px) scale(1.4); opacity: 0; }
         }
 
-        /* Water Ripples & Grass */
         .ripple {
             position: absolute;
             border: 3px solid rgba(255, 255, 255, 0.85);
@@ -692,7 +687,7 @@
             bottom: -5px;
             left: -20px;
             width: calc(100% + 40px);
-            height: 55px;
+            height: 45px;
             pointer-events: none;
             z-index: 20;
             display: flex;
@@ -712,7 +707,6 @@
             100% { transform: rotate(12deg); }
         }
 
-        /* Modals (Game Over, Leaderboard, Pause) */
         .modal-overlay {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
@@ -775,7 +769,6 @@
             color: #047857;
         }
 
-        /* Hint & Pause In-Game Action Bar */
         .ingame-action-bar {
             position: absolute;
             bottom: 15px;
@@ -788,7 +781,7 @@
 </head>
 <body>
 
-    <!-- Weather Background Canvas (Rain & Lightning) -->
+    <!-- Weather Background Canvas -->
     <canvas id="weather-canvas"></canvas>
     
     <!-- Victory Confetti Canvas -->
@@ -811,7 +804,6 @@
         <button class="icon-btn" id="btn-menu" style="display:none;" title="Menu Utama">🏠</button>
     </div>
 
-    <!-- Main Menu Screen -->
     <div id="main-menu">
         <div class="menu-box">
             <div class="menu-left">
@@ -820,34 +812,27 @@
                     <div class="menu-title-sub" id="txt-sub-title">MATH EDUGAME</div>
                 </div>
                 
-                <!-- Mascot Frog with Blinking Eye Animation -->
                 <div class="mascot-container">
                     <svg class="mascot-img" viewBox="0 0 200 180" width="100%" height="100%">
                         <ellipse cx="100" cy="110" rx="65" ry="50" fill="#4ade80" />
                         <ellipse cx="100" cy="115" rx="45" ry="35" fill="#bbf7d0" />
-                        <!-- Left Eye -->
                         <circle cx="65" cy="65" r="22" fill="#4ade80" />
                         <circle cx="65" cy="65" r="16" fill="#ffffff" />
                         <circle class="frog-eye-pupil" cx="68" cy="63" r="8" fill="#0f172a" />
                         <circle cx="71" cy="60" r="3" fill="#ffffff" />
-                        <!-- Right Eye -->
                         <circle cx="135" cy="65" r="22" fill="#4ade80" />
                         <circle cx="135" cy="65" r="16" fill="#ffffff" />
                         <circle class="frog-eye-pupil" cx="132" cy="63" r="8" fill="#0f172a" />
                         <circle cx="135" cy="60" r="3" fill="#ffffff" />
-                        <!-- Cheeks -->
                         <circle cx="50" cy="105" r="10" fill="#f472b6" opacity="0.6" />
                         <circle cx="150" cy="105" r="10" fill="#f472b6" opacity="0.6" />
-                        <!-- Smile -->
                         <path d="M 80 115 Q 100 135 120 115" fill="none" stroke="#064e3b" stroke-width="4" stroke-linecap="round" />
-                        <!-- Dynamic Accessory Slot -->
                         <g id="mascot-accessory">
                             <polygon points="85,45 100,25 115,45 125,35 130,50 70,50 75,35" fill="#fbbf24" stroke="#d97706" stroke-width="2"/>
                         </g>
                     </svg>
                 </div>
 
-                <!-- Character Selection Bar -->
                 <div>
                     <div class="text-xs font-bold text-gray-500 mb-1 text-center" id="txt-choose-skin">Pilihan Karakter:</div>
                     <div class="char-select-bar">
@@ -860,10 +845,8 @@
             </div>
             
             <div class="menu-right">
-                <!-- Section Header Title - Formatted & Centered -->
                 <h3 class="section-header-title" id="txt-menu-header">Pilih Tingkat Kesulitan & Mode Game</h3>
                 
-                <!-- Operations Selector (Centered) -->
                 <div class="selector-row">
                     <button class="op-btn active" onclick="setOperation('all')" id="op-all">Semua</button>
                     <button class="op-btn" onclick="setOperation('+')" id="op-add">+</button>
@@ -872,14 +855,12 @@
                     <button class="op-btn" onclick="setOperation('÷')" id="op-div">÷</button>
                 </div>
 
-                <!-- Difficulty Selector (Centered) -->
                 <div class="selector-row">
                     <button class="diff-btn active" onclick="setDifficulty('easy')" id="diff-easy">Mudah (+ -)</button>
                     <button class="diff-btn" onclick="setDifficulty('medium')" id="diff-medium">Sedang (×)</button>
                     <button class="diff-btn" onclick="setDifficulty('hard')" id="diff-hard">Campur (÷)</button>
                 </div>
 
-                <!-- Time Duration & Mode Options -->
                 <div class="selector-row">
                     <button class="time-btn" onclick="setDuration(30)" id="time-30">30s</button>
                     <button class="time-btn active" onclick="setDuration(60)" id="time-60">60s</button>
@@ -887,14 +868,12 @@
                     <button class="time-btn" onclick="toggleTimeAttack()" id="time-attack">⚡ Time Attack</button>
                 </div>
 
-                <!-- Mode Game Action Buttons -->
                 <div class="mode-buttons">
                     <button class="mode-btn" onclick="startGame('solo')">👤 Solo Mode (1P)</button>
                     <button class="mode-btn" onclick="startGame('duel')" style="background:#3b82f6; border-color:#1d4ed8;">⚔️ Duel Mode (2P)</button>
                     <button class="mode-btn" onclick="startGame('squad')" style="background:#eab308; border-color:#a16207;">👨‍👩‍👧‍👦 Squad Mode (4P)</button>
                 </div>
                 
-                <!-- Bottom Spacer Box: Retains original layout dimensions without credits text -->
                 <div class="creator-box-spacer">
                     <div class="math-info-card" id="math-info-card">
                         💡 Tips: Penjumlahan & Pengurangan dasar untuk pemula!
@@ -907,7 +886,7 @@
     <!-- Active Game Container -->
     <div id="game-container"></div>
 
-    <!-- In-Game Action Buttons (Hint Button) -->
+    <!-- In-Game Action Bar -->
     <div class="ingame-action-bar" id="ingame-actions" style="display:none;">
         <button class="mode-btn" id="btn-hint" onclick="useHint()" style="padding: 8px 16px; font-size: 1rem; background: #8b5cf6; border-color: #6d28d9;">
             💡 Hint (1x)
@@ -941,7 +920,6 @@
         </div>
     </div>
 
-    <!-- Grass Decor Container -->
     <div id="grass-container"></div>
 
     <script>
@@ -951,10 +929,9 @@
         let isMusicEnabled = true;
         let bgmGainNode = null;
         let bgmTimer = null;
-        let currentLang = 'id'; // 'id' or 'en'
+        let currentLang = 'id';
         let isFxEnabled = true;
 
-        // Language Translation Dictionary
         const i18n = {
             id: {
                 titleSub: "MATH EDUGAME",
@@ -1028,7 +1005,6 @@
             }
         }
 
-        /* Synthesized Web Audio Sound Engine */
         const SoundEngine = {
             playTone: (freq, type, duration, vol=0.1, freqRamp=null) => {
                 if (!isAudioEnabled || !audioCtx) return;
@@ -1065,7 +1041,6 @@
             },
             splashByurr: () => {
                 if (!isAudioEnabled || !audioCtx) return;
-                // Loud procedural "Byurr!" splash noise burst + low thud
                 const bufferSize = audioCtx.sampleRate * 0.35;
                 const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
                 const data = buffer.getChannelData(0);
@@ -1087,8 +1062,6 @@
                 filter.connect(gain);
                 gain.connect(audioCtx.destination);
                 noise.start();
-
-                // Low bass thud impact
                 SoundEngine.playTone(120, 'sine', 0.3, 0.3, 40);
             },
             timeTing: () => {
@@ -1116,7 +1089,6 @@
             }
         };
 
-        /* Procedural Kids Background Music (BGM Loop) */
         function startBackgroundMusic() {
             if (bgmTimer) clearInterval(bgmTimer);
             const notes = [261.63, 329.63, 392.00, 523.25, 392.00, 329.63];
@@ -1141,7 +1113,6 @@
             }, 320);
         }
 
-        /* Voice Narration via Web Speech API */
         function speakNarration(text) {
             if (!isAudioEnabled || !('speechSynthesis' in window)) return;
             try {
@@ -1198,7 +1169,6 @@
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             if (isFxEnabled) {
                 drops.forEach(d => { d.update(); d.draw(); });
-                // Random lightning flash effect
                 if (Math.random() < 0.003) lightningAlpha = 0.35;
                 if (lightningAlpha > 0) {
                     ctx.fillStyle = `rgba(255, 255, 255, ${lightningAlpha})`;
@@ -1210,7 +1180,6 @@
         }
         animateWeather();
 
-        /* Grass Decor Generator */
         function initGrass() {
             const container = document.getElementById('grass-container');
             container.innerHTML = '';
@@ -1229,11 +1198,11 @@
         window.addEventListener('resize', initGrass);
 
         let selectedCharacterIdx = 0;
-        let selectedOperation = 'all'; // 'all', '+', '-', '×', '÷'
-        let currentDifficulty = 'easy'; // 'easy', 'medium', 'hard'
-        let selectedDuration = 60; // 30, 60, 90
+        let selectedOperation = 'all';
+        let currentDifficulty = 'easy';
+        let selectedDuration = 60;
         let isTimeAttack = false;
-        let currentMode = 'solo'; // 'solo', 'duel', 'squad'
+        let currentMode = 'solo';
         
         let gameState = {
             active: false,
@@ -1270,9 +1239,7 @@
             currentDifficulty = diff;
             document.querySelectorAll('.diff-btn').forEach(btn => btn.classList.remove('active'));
             document.getElementById(`diff-${diff}`).classList.add('active');
-            
-            const card = document.getElementById('math-info-card');
-            card.innerText = i18n[currentLang].mathTips[diff];
+            document.getElementById('math-info-card').innerText = i18n[currentLang].mathTips[diff];
             SoundEngine.click();
         }
 
@@ -1295,7 +1262,6 @@
             currentLang = currentLang === 'id' ? 'en' : 'id';
             document.getElementById('btn-lang').innerText = currentLang === 'id' ? '🇮🇩' : '🇬🇧';
             
-            // Translate UI elements
             const t = i18n[currentLang];
             document.getElementById('txt-sub-title').innerText = t.titleSub;
             document.getElementById('txt-menu-header').innerText = t.menuHeader;
@@ -1338,7 +1304,7 @@
                 num1 = Math.floor(Math.random() * 9) + 2;
                 num2 = Math.floor(Math.random() * 9) + 2;
                 answer = num1 * num2;
-            } else { // ÷
+            } else {
                 num2 = Math.floor(Math.random() * 9) + 2;
                 answer = Math.floor(Math.random() * 10) + 1;
                 num1 = num2 * answer;
@@ -1377,8 +1343,8 @@
 
             let playerNames = [];
             if (mode === 'solo') playerNames = ['Pemain 1'];
-            else if (mode === 'duel') playerNames = ['Katak Merah', 'Katak Biru'];
-            else playerNames = ['P1 (Hijau)', 'P2 (Kuning)', 'P3 (Biru)', 'P4 (Ungu)'];
+            else if (mode === 'duel') playerNames = ['Pemain 1 (Atas)', 'Pemain 2 (Bawah)'];
+            else playerNames = ['Pemain 1', 'Pemain 2', 'Pemain 3', 'Pemain 4'];
 
             const frogColors = [frogCharacters[selectedCharacterIdx].color, '#facc15', '#60a5fa', '#c084fc'];
 
@@ -1469,10 +1435,9 @@
                 pad.style.pointerEvents = 'auto';
             });
 
-            // Reset Frog Position
             const frog = document.getElementById(`frog-${playerId}`);
             if (frog) {
-                frog.style.bottom = '28px';
+                frog.style.bottom = currentMode === 'squad' ? '14px' : '22px';
                 frog.style.left = '50%';
                 frog.style.transform = 'translateX(-50%)';
             }
@@ -1495,10 +1460,8 @@
             const targetX = (padRect.left + padRect.width / 2) - playRect.left;
             const targetY = playRect.bottom - (padRect.top + padRect.height / 2);
 
-            // Footprint Trail Particle
             createFootprintTrail(playArea, targetX, playArea.offsetHeight - targetY);
 
-            // Animate Frog Nimble Jump
             frog.style.left = `${targetX}px`;
             frog.style.bottom = `${targetY}px`;
             frog.style.transform = 'translateX(-50%) scale(1.2) rotate(6deg)';
@@ -1516,17 +1479,14 @@
                     SoundEngine.correct();
                     speakNarration(i18n[currentLang].hebat);
 
-                    // Lotus Flower Bloom Overlay
                     createLotusBloom(padWrapper);
 
-                    // Streak & Combo Logic
                     player.streak += 1;
                     player.combo += 1;
 
                     let scoreAdd = player.superMode ? 20 : 10;
                     player.score += scoreAdd;
 
-                    // Animate Score Badge Pulse
                     const scoreBadge = document.getElementById(`score-${playerId}`);
                     if (scoreBadge) {
                         scoreBadge.innerText = `Skor: ${player.score}`;
@@ -1534,25 +1494,21 @@
                         setTimeout(() => scoreBadge.classList.remove('badge-pulse'), 350);
                     }
 
-                    // Level Up Check (Every 50 pts)
                     if (player.score > 0 && player.score % 50 === 0) {
                         showBanner(playArea, i18n[currentLang].levelUp, '#f59e0b');
                         SoundEngine.levelUpHoree();
                     }
 
-                    // Bonus Time (+5s) on 5 consecutive correct answers
                     if (player.streak > 0 && player.streak % 5 === 0) {
                         gameState.timeLeft += 5;
                         showBanner(playArea, i18n[currentLang].timeBonus, '#10b981');
                         SoundEngine.timeTing();
                     }
 
-                    // Combo Banner Display
                     if (player.combo >= 2) {
                         showBanner(playArea, `COMBO x${player.combo}!`, '#ec4899');
                     }
 
-                    // Trigger Super Frog Mode at Combo x5
                     if (player.combo === 5 && !player.superMode) {
                         player.superMode = true;
                         frog.classList.add('super-mode');
@@ -1575,7 +1531,6 @@
                     player.streak = 0;
                     player.combo = 0;
 
-                    // Time Attack Penalty (-3s)
                     if (isTimeAttack && gameState.timeLeft > 3) {
                         gameState.timeLeft -= 3;
                         showBanner(playArea, i18n[currentLang].timePenalty, '#ef4444');
@@ -1591,9 +1546,8 @@
                         createSplashParticles(playArea, targetX, playArea.offsetHeight - targetY);
                         createUnderwaterBubbles(playArea, targetX, playArea.offsetHeight - targetY);
 
-                        // Swim Back Animation to start position
                         setTimeout(() => {
-                            frog.style.bottom = '28px';
+                            frog.style.bottom = currentMode === 'squad' ? '14px' : '22px';
                             frog.style.left = '50%';
                             frog.style.transform = 'translateX(-50%)';
                             setTimeout(() => loadPlayerProblem(playerId), 500);
@@ -1603,7 +1557,6 @@
             }, 350);
         }
 
-        /* Particle Visual Helper Functions */
         function createFootprintTrail(container, x, y) {
             for (let i = 0; i < 3; i++) {
                 const trail = document.createElement('div');
@@ -1800,7 +1753,7 @@
                 particles.forEach(p => {
                     p.x += p.vx;
                     p.y += p.vy;
-                    p.vy += 0.25; // gravity
+                    p.vy += 0.25;
                     ctx.fillStyle = p.color;
                     ctx.fillRect(p.x, p.y, p.size, p.size);
                 });
